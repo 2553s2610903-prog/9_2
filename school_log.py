@@ -1,75 +1,93 @@
 import streamlit as st
-import importlib.util
 
-# 모듈을 동적으로 로드하기 위한 함수 (파일명에 공백이 있어도 로드 가능)
-def load_page(filename):
-    spec = importlib.util.spec_from_file_location("module.name", filename)
-    foo = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(foo)
-    return foo
-
-# 페이지 기본 설정
+# 1. 페이지 기본 설정 (가독성을 위한 wide 레이아웃)
 st.set_page_config(
-    page_title="9반 2조 학교 통합 포털",
+    page_title="school log",
     page_icon="🏫",
     layout="wide"
 )
 
-# 사이드바 메뉴
-st.sidebar.title("📌 [9반 2조] 메뉴")
+# 2. 사이드바 메뉴 구성
+st.sidebar.title("📌 school log 메뉴")
 menu = st.sidebar.radio(
-    "이동할 페이지를 선택하세요:",
-    ["🏠 메인 페이지 (school_log)", "📅 학교 일정 달력", "🏥 응급톡", "💌 익명 칭찬 게시판"]
+    "원하는 페이지를 선택하세요:",
+    [
+        "🏠 메인 페이지 (school log)", 
+        "📅 학교 일정 달력", 
+        "🏥 응급톡", 
+        "💌 칭찬 게시판"
+    ]
 )
 
-# 1. 메인 페이지
-if menu == "🏠 메인 페이지 (school_log)":
-    st.title("🏫 9반 2조 학교 통합 포털에 오신 것을 환영합니다!")
+# -----------------------------------------------------------------------------
+# [메인 페이지] school log
+# -----------------------------------------------------------------------------
+if menu == "🏠 메인 페이지 (school log)":
+    
+    # 타이틀 (깔끔하고 큰 글씨)
+    st.title("🏫 school log")
+    st.caption("9반 2조 바이브코딩 수행평가 보고서 기반 웹 사이트")
     st.markdown("---")
     
+    # 1. 사이트 소개 섹션
     st.subheader("💡 이 사이트는 어떤 사이트인가요?")
-    st.write("우리 학교 학생들의 편리하고 안전한 학교 생활을 돕기 위해 9반 2조가 만든 통합 포털 사이트입니다.")
+    st.write(
+        "이 사이트는 우리 학교 학생들에게 필요한 **학교 일정, 응급 상황 대처 요령, 익명 칭찬 공간**을 "
+        "한곳에서 손쉽게 확인할 수 있도록 안내해 주는 통합 정보 포털입니다."
+    )
     
-    st.markdown("---")
-    st.subheader("📋 주요 기능 안내")
+    st.write("") # 여백
+    st.write("")
+
+    # 2. 제공하는 정보 안내 (카드 형태의 깔끔한 배치)
+    st.subheader("📋 주요 제공 정보 및 기능 안내")
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.info("### 📅 학교 일정 달력")
-        st.write("학교 주요 행사, 시험 일정, 수행평가 제출일을 한눈에 확인할 수 있는 달력입니다.")
-        
+        st.markdown("### 📅 학교 일정 달력")
+        st.markdown("**담당: 국아린**")
+        st.write(
+            "학교 행사 일정, 시험 일정, 수행평가 일정 등을 "
+            "날짜별로 알아보기 쉽게 정돈된 달력으로 표시합니다."
+        )
+
     with col2:
-        st.error("### 🏥 응급톡")
-        st.write("갑자기 아프거나 응급 상황이 발생했을 때 바로 확인해야 하는 대처 요령과 주의사항을 제공합니다.")
-        
+        st.markdown("### 🏥 응급톡")
+        st.markdown("**담당: 최은진**")
+        st.write(
+            "학교에서 갑자기 아플 때 응급 상황 대처 방법과 "
+            "하면 안 되는 행동 요령을 알기 쉽게 포스터 형태로 제공합니다."
+        )
+
     with col3:
-        st.success("### 💌 익명 칭찬 게시판")
-        st.write("평소 친구에게 전하지 못했던 고마움과 따뜻한 칭찬의 한마디를 익명으로 나누는 공간입니다.")
+        st.markdown("### 💌 칭찬 게시판")
+        st.markdown("**담당: 한수민**")
+        st.write(
+            "친구에게 평소 전하지 못했던 고마움이나 응원의 마음을 "
+            "익명으로 전할 수 있는 게시판입니다."
+        )
 
     st.markdown("---")
-    st.caption("제작: 9반 2조 (정영인, 국아린, 최은진, 한수민)")
+    
+    # 3. 하단 조원 정보
+    st.markdown("#### 👥 9반 2조 구성원")
+    st.text("• 정영인 (school_log.py - 메인 페이지)")
+    st.text("• 국아린 (학교 일정 달력.py)")
+    st.text("• 최은진 (응급톡.py)")
+    st.text("• 한수민 (칭찬 게시판.py)")
 
-# 2. 학교 일정 달력 페이지 연결
+# -----------------------------------------------------------------------------
+# [서브 페이지 연동 안내] (각 조원이 만든 코드 파일 연동용)
+# -----------------------------------------------------------------------------
 elif menu == "📅 학교 일정 달력":
-    try:
-        page = load_page("학교 일정 달력.py")
-        page.run()
-    except FileNotFoundError:
-        st.warning("'학교 일정 달력.py' 파일을 찾을 수 없습니다.")
+    st.title("📅 학교 일정 달력")
+    st.info("국아린 학생이 작성한 '학교 일정 달력.py' 내용이 연결되는 페이지입니다.")
 
-# 3. 응급톡 페이지 연결
 elif menu == "🏥 응급톡":
-    try:
-        page = load_page("응급톡.py")
-        page.run()
-    except FileNotFoundError:
-        st.warning("'응급톡.py' 파일을 찾을 수 없습니다.")
+    st.title("🏥 응급톡")
+    st.info("최은진 학생이 작성한 '응급톡.py' 내용이 연결되는 페이지입니다.")
 
-# 4. 칭찬 게시판 페이지 연결
-elif menu == "💌 익명 칭찬 게시판":
-    try:
-        page = load_page("칭찬 게시판.py")
-        page.run()
-    except FileNotFoundError:
-        st.warning("'칭찬 게시판.py' 파일을 찾을 수 없습니다.")
+elif menu == "💌 칭찬 게시판":
+    st.title("💌 칭찬 게시판")
+    st.info("한수민 학생이 작성한 '칭찬 게시판.py' 내용이 연결되는 페이지입니다.")
