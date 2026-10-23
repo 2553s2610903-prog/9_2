@@ -8,7 +8,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------- CSS 디자인 ----------
 st.markdown("""
 <style>
 .stApp {
@@ -19,14 +18,6 @@ st.markdown("""
 .block-container {
     max-width: 1500px;
     padding: 1.2rem 2rem 2rem;
-}
-
-/* 전체 메인 화면 */
-.site {
-    background: white;
-    border-radius: 16px;
-    padding: 0 28px 28px;
-    box-shadow: 0 8px 35px rgba(0,0,0,0.06);
 }
 
 /* 상단 헤더 */
@@ -51,8 +42,8 @@ st.markdown("""
 
 hr {
     border: none;
-    border-top: 1px solid #e9e9e9;
-    margin: 5px 0 20px;
+    border-top: 1px solid #d9dadd;
+    margin: 5px 0 25px;
 }
 
 /* 왼쪽 메뉴 */
@@ -65,34 +56,36 @@ hr {
 
 .menu-title {
     font-size: 15px;
-    color: #777;
-    padding: 13px 12px;
-    border-radius: 7px;
-    margin-bottom: 5px;
-}
-
-.menu-title.active {
     color: #222;
-    background: #f1f5f2;
+    background: #f7f9f7;
     font-weight: 800;
+    padding: 17px 12px;
+    border-radius: 7px;
     border-left: 3px solid #568b75;
 }
 
-/* 메인 비주얼 배너 */
+.menu-footer {
+    border-top: 1px solid #ddd;
+    margin-top: 30px;
+    padding-top: 20px;
+    color: #888;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* 메인 배너 */
 .main-banner {
     min-height: 370px;
     border-radius: 3px;
-    overflow: hidden;
     position: relative;
-    background:
-        radial-gradient(ellipse at 85% 15%,
-            rgba(255,255,255,.85) 0 2%,
-            transparent 2.5%),
-        radial-gradient(ellipse at 78% 20%,
-            rgba(255,255,255,.4) 0 8%,
-            transparent 8.5%),
-        linear-gradient(120deg, #315c55 0%, #91b8a2 42%,
-            #d6d7a0 70%, #e9dca9 100%);
+    overflow: hidden;
+    background: linear-gradient(
+        120deg,
+        #315c55 0%,
+        #91b8a2 42%,
+        #d6d7a0 70%,
+        #e9dca9 100%
+    );
     display: flex;
     align-items: center;
     padding: 38px;
@@ -115,15 +108,15 @@ hr {
 
 .banner-title {
     color: white;
-    font-size: clamp(30px, 4vw, 48px);
+    font-size: clamp(30px, 3.5vw, 48px);
     font-weight: 800;
-    line-height: 1.35;
+    line-height: 1.4;
     letter-spacing: -2px;
     text-shadow: 0 2px 12px rgba(0,0,0,.12);
 }
 
 .banner-desc {
-    color: #fff;
+    color: white;
     font-size: 15px;
     line-height: 1.9;
     margin-top: 16px;
@@ -138,7 +131,6 @@ hr {
     filter: drop-shadow(0 12px 14px rgba(0,0,0,.1));
 }
 
-/* 배너 하단 표시 */
 .banner-bottom {
     display: flex;
     justify-content: space-between;
@@ -155,13 +147,13 @@ hr {
     font-size: 17px;
 }
 
-/* 기능 섹션 */
+/* 서비스 제목 */
 .section-heading {
     font-size: 22px;
     font-weight: 800;
-    letter-spacing: -0.7px;
+    letter-spacing: -.7px;
     color: #222;
-    margin: 5px 0 5px;
+    margin: 5px 0;
 }
 
 .section-sub {
@@ -170,7 +162,7 @@ hr {
     margin-bottom: 18px;
 }
 
-/* 기능 카드 */
+/* 서비스 카드 */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     background: white;
     border: 1px solid #e9e9e9;
@@ -213,7 +205,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     transform: translateY(-1px);
 }
 
-/* 하단 공지 */
+/* 하단 안내 */
 .notice {
     background: #f5f7f4;
     border-left: 3px solid #568b75;
@@ -231,14 +223,10 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     padding: 25px 0 5px;
 }
 
-/* 모바일 대응 */
+/* 모바일 */
 @media (max-width: 768px) {
     .block-container {
         padding: 1rem;
-    }
-
-    .site {
-        padding: 0 12px 20px;
     }
 
     .main-banner {
@@ -255,7 +243,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- 상단 헤더 ----------
+# 상단 헤더
 header_left, header_right = st.columns([3, 1])
 
 with header_left:
@@ -272,7 +260,7 @@ with header_right:
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# ---------- 좌측 메뉴 + 메인 콘텐츠 ----------
+# 왼쪽 MAIN 메뉴 + 메인 콘텐츠
 sidebar, main = st.columns([1, 4], gap="large")
 
 with sidebar:
@@ -281,41 +269,21 @@ with sidebar:
         unsafe_allow_html=True
     )
 
+    # MAIN만 표시하고 나머지 메뉴는 제거
     st.markdown(
-        '<div class="menu-title active">MAIN</div>',
+        '<div class="menu-title">MAIN</div>',
         unsafe_allow_html=True
     )
 
-    st.markdown(
-        '<div class="menu-title">학교 일정</div>',
-        unsafe_allow_html=True
-    )
-    if st.button("일정 페이지 →", key="side_calendar",
-                 use_container_width=True):
-        st.switch_page("pages/학교일정달력.py")
-
-    st.markdown(
-        '<div class="menu-title">응급톡</div>',
-        unsafe_allow_html=True
-    )
-    if st.button("응급 정보 →", key="side_emergency",
-                 use_container_width=True):
-        st.switch_page("pages/응급톡.py")
-
-    st.markdown(
-        '<div class="menu-title">D-Day 알람</div>',
-        unsafe_allow_html=True
-    )
-    if st.button("D-Day 페이지 →", key="side_dday",
-                 use_container_width=True):
-        st.switch_page("pages/D-Day 알람.py")
-
-    st.markdown("---")
-    st.caption("YOUR SCHOOL, YOUR LIFE")
-    st.caption("학교생활을 더 편리하게")
+    st.markdown("""
+    <div class="menu-footer">
+        YOUR SCHOOL,<br>
+        YOUR LIFE
+    </div>
+    """, unsafe_allow_html=True)
 
 with main:
-    # ---------- 메인 배너 ----------
+    # 메인 배너
     st.markdown("""
     <div class="main-banner">
         <div class="banner-content">
@@ -331,18 +299,20 @@ with main:
         </div>
         <div class="banner-symbol">🎓</div>
     </div>
+
     <div class="banner-bottom">
         <span>SCHOOL INFORMATION SERVICE</span>
         <span class="banner-dots">● ○ ○</span>
     </div>
     """, unsafe_allow_html=True)
 
-    # ---------- 서비스 카드 ----------
-    st.markdown(
-        '<div class="section-heading">EXPLORE OUR SERVICES</div>'
-        '<div class="section-sub">학교생활에 필요한 메뉴를 선택하세요.</div>',
-        unsafe_allow_html=True
-    )
+    # 서비스 카드
+    st.markdown("""
+    <div class="section-heading">EXPLORE OUR SERVICES</div>
+    <div class="section-sub">
+        학교생활에 필요한 메뉴를 선택하세요.
+    </div>
+    """, unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3, gap="medium")
 
@@ -357,8 +327,11 @@ with main:
             </div>
             """, unsafe_allow_html=True)
 
-            if st.button("VIEW SCHEDULE  →", key="calendar",
-                         use_container_width=True):
+            if st.button(
+                "VIEW SCHEDULE →",
+                key="calendar",
+                use_container_width=True
+            ):
                 st.switch_page("pages/학교일정달력.py")
 
     with col2:
@@ -372,8 +345,11 @@ with main:
             </div>
             """, unsafe_allow_html=True)
 
-            if st.button("VIEW GUIDE  →", key="emergency",
-                         use_container_width=True):
+            if st.button(
+                "VIEW GUIDE →",
+                key="emergency",
+                use_container_width=True
+            ):
                 st.switch_page("pages/응급톡.py")
 
     with col3:
@@ -387,18 +363,23 @@ with main:
             </div>
             """, unsafe_allow_html=True)
 
-            if st.button("VIEW D-DAY  →", key="dday",
-                         use_container_width=True):
+            if st.button(
+                "VIEW D-DAY →",
+                key="dday",
+                use_container_width=True
+            ):
                 st.switch_page("pages/D-Day 알람.py")
 
-# ---------- 하단 공지 ----------
+# 하단 안내
 st.markdown("""
 <div class="notice">
     <b>💡 SCHOOL LIFE TIP</b><br>
     시험과 수행평가 일정을 미리 확인하세요.
     응급상황에서는 주변 선생님에게 도움을 요청하세요.
 </div>
+
 <div class="footer">
-    SCHOOL INFO © &nbsp; | &nbsp; 학교 공식 일정은 학교 공지사항을 확인하세요.
+    SCHOOL INFO &nbsp; | &nbsp;
+    학교 공식 일정은 학교 공지사항을 확인하세요.
 </div>
 """, unsafe_allow_html=True)
