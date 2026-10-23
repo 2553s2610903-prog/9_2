@@ -3,7 +3,7 @@ import streamlit as st
 from datetime import date
 
 st.set_page_config(
-    page_title="학교정보 알리미",
+    page_title="SCHOOL LOG",
     page_icon="🎓",
     layout="wide"
 )
@@ -11,7 +11,6 @@ st.set_page_config(
 # ---------- 디자인 CSS ----------
 st.markdown("""
 <style>
-/* 전체 배경 및 기본 글꼴 */
 .stApp {
     background: #f7f9fd;
     color: #172b4d;
@@ -186,7 +185,7 @@ div[data-testid="stHorizontalBlock"] > div:nth-child(3)
 # ---------- 상단 배너 ----------
 st.markdown("""
 <div class="hero">
-    <h1>🎓 학교정보 알리미</h1>
+    <h1>🎓 SCHOOL LOG</h1>
     <p>학교생활에 필요한 정보를 한곳에서 확인하세요!</p>
 </div>
 """, unsafe_allow_html=True)
