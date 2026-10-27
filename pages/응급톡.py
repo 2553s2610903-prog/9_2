@@ -19,7 +19,7 @@ st.markdown("""
 .poster {
     background: #cfe5f8;
     border: 2px solid #3986c5;
-    border-radius: 45px;
+    border-radius: 35px;
     padding: 20px;
 }
 .poster-title {
@@ -38,7 +38,7 @@ st.markdown("""
     border: 2px solid #75b9f3;
     border-radius: 20px;
     padding: 15px;
-    margin: 10px 0;
+    margin: 15px 0;
 }
 .section-label {
     border: 2px solid #174d82;
@@ -53,23 +53,21 @@ st.markdown("""
     background: linear-gradient(145deg, #e4f2ff, #b9d9f3);
     border: 2px solid #8abce6;
     border-radius: 12px;
-    min-height: 150px;
+    min-height: 180px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: #174d82;
-    font-size: 25px;
-    font-weight: bold;
     padding: 10px;
+}
+.picture-icon {
+    font-size: 85px;
 }
 .guide {
     background: #f8fbff;
     border: 2px solid #8ac7ff;
     border-radius: 14px;
     padding: 15px;
-    min-height: 200px;
     color: #20364d;
 }
 .guide h3 {
@@ -116,7 +114,6 @@ situations = [
     {
         "label": "응급상황 1: 화상",
         "icon": "🔥",
-        "name": "화상",
         "steps": [
             "열원에서 안전하게 벗어납니다.",
             "흐르는 시원한 물로 약 20분간 식힙니다.",
@@ -128,7 +125,6 @@ situations = [
     {
         "label": "응급상황 2: 출혈",
         "icon": "🩹",
-        "name": "출혈",
         "steps": [
             "가능하면 장갑 등으로 혈액 접촉을 피합니다.",
             "깨끗한 거즈나 천으로 상처를 직접 누릅니다.",
@@ -140,7 +136,6 @@ situations = [
     {
         "label": "응급상황 3: 코피",
         "icon": "🩸",
-        "name": "코피",
         "steps": [
             "앉아서 머리를 약간 앞으로 숙입니다.",
             "콧방울의 부드러운 부분을 10~15분간 계속 누릅니다.",
@@ -170,10 +165,10 @@ for item in situations:
             unsafe_allow_html=True
         )
 
+        # 그림 영역에는 글자 없이 아이콘만 표시
         st.markdown(
             f'<div class="picture">'
-            f'<div style="font-size:55px">{item["icon"]}</div>'
-            f'<div>{item["name"]}</div>'
+            f'<div class="picture-icon">{item["icon"]}</div>'
             f'</div>',
             unsafe_allow_html=True
         )
@@ -187,7 +182,7 @@ for item in situations:
 
         st.markdown(
             f'<div class="guide">'
-            f'<h3>{item["icon"]} {item["name"]} 발생 시 대처 방법</h3>'
+            f'<h3>{item["label"]} 대처 방법</h3>'
             f'{steps_html}'
             f'<div class="warning">⚠️ 주의사항<br>'
             f'{item["warning"]}</div>'
