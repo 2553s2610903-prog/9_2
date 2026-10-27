@@ -1,5 +1,6 @@
 
 
+
 import streamlit as st
 
 st.set_page_config(
@@ -11,7 +12,7 @@ st.set_page_config(
 st.markdown("""
 <style>
 .stApp {
-    background-color: #f4f8fc;
+    background: #f4f8fc;
 }
 .block-container {
     max-width: 1100px;
@@ -61,7 +62,7 @@ st.markdown("""
     align-items: center;
     text-align: center;
     color: #174d82;
-    font-size: 22px;
+    font-size: 25px;
     font-weight: bold;
     padding: 10px;
 }
@@ -117,7 +118,6 @@ situations = [
         "label": "응급상황 1",
         "icon": "🔥",
         "name": "화상",
-        "picture": "🔥",
         "steps": [
             "열원에서 안전하게 벗어납니다.",
             "흐르는 시원한 물로 약 20분간 식힙니다.",
@@ -128,22 +128,8 @@ situations = [
     },
     {
         "label": "응급상황 2",
-        "icon": "🩸",
-        "name": "코피",
-        "picture": "🩸",
-        "steps": [
-            "앉아서 머리를 약간 앞으로 숙입니다.",
-            "콧방울의 부드러운 부분을 10~15분간 눌러 줍니다.",
-            "입으로 숨을 쉬고 피는 삼키지 않습니다.",
-            "20분 정도 압박해도 멈추지 않으면 진료를 받습니다."
-        ],
-        "warning": "고개를 뒤로 젖히거나 코를 세게 풀지 마세요."
-    },
-    {
-        "label": "응급상황 3",
         "icon": "🩹",
         "name": "출혈",
-        "picture": "🩹",
         "steps": [
             "가능하면 장갑 등으로 혈액 접촉을 피합니다.",
             "깨끗한 거즈나 천으로 상처를 직접 누릅니다.",
@@ -151,13 +137,22 @@ situations = [
             "출혈이 심하거나 멈추지 않으면 119에 신고합니다."
         ],
         "warning": "상처에 박힌 물체를 직접 빼내지 마세요."
+    },
+    {
+        "label": "응급상황 3",
+        "icon": "🩸",
+        "name": "코피",
+        "steps": [
+            "앉아서 머리를 약간 앞으로 숙입니다.",
+            "콧방울의 부드러운 부분을 10~15분간 눌러 줍니다.",
+            "입으로 숨을 쉬고 피는 삼키지 않습니다.",
+            "20분 정도 압박해도 멈추지 않으면 진료를 받습니다."
+        ],
+        "warning": "고개를 뒤로 젖히거나 코를 세게 풀지 마세요."
     }
 ]
 
-st.markdown(
-    '<div class="poster">',
-    unsafe_allow_html=True
-)
+st.markdown('<div class="poster">', unsafe_allow_html=True)
 
 st.markdown(
     f'<div style="text-align:right;color:#174d82;">'
@@ -175,10 +170,11 @@ for item in situations:
             f'<div class="section-label">{item["label"]}</div>',
             unsafe_allow_html=True
         )
+
+        # '상황별 그림' 문구 없이 응급 상황 이름만 표시
         st.markdown(
             f'<div class="picture">'
-            f'<div style="font-size:55px">{item["picture"]}</div>'
-            f'<div>상황별 그림</div>'
+            f'<div style="font-size:55px">{item["icon"]}</div>'
             f'<div>{item["name"]}</div>'
             f'</div>',
             unsafe_allow_html=True
