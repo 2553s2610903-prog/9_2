@@ -1,27 +1,87 @@
+```python
 import streamlit as st
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from html import escape
+
+# =========================================
+# 페이지 설정
+# =========================================
 
 st.set_page_config(
     page_title="SCHOOL LOG",
-    page_icon="🎓",
-    layout="wide"
+    page_icon="📘",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# ---------- 한국 시간 기준 날짜 ----------
+# 한국 시간 기준 날짜
 today = datetime.now(ZoneInfo("Asia/Seoul")).date()
 
-# ---------- 디자인 CSS ----------
+# =========================================
+# SVG 아이콘
+# =========================================
+
+def make_icon(name):
+    """서비스 카드용 통일된 선형 SVG 아이콘"""
+
+    icons = {
+        "calendar": """
+            <rect x="3" y="5" width="18" height="16" rx="1"/>
+            <path d="M16 3v4M8 3v4M3 10h18"/>
+            <path d="M7 14h3M7 17h3M14 14h3M14 17h3"/>
+        """,
+        "medical": """
+            <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/>
+            <path d="M12 8v8M8 12h8"/>
+        """,
+        "clock": """
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 2"/>
+            <path d="M8 2h8"/>
+        """
+    }
+
+    svg_body = icons.get(name, icons["calendar"])
+
+    return f"""
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="38"
+        height="38"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+        stroke-linejoin="miter"
+        aria-hidden="true"
+    >
+        {svg_body}
+    </svg>
+    """
+
+
+# =========================================
+# CSS
+# =========================================
+
 st.markdown("""
 <style>
 
-/* =========================================
-   1. 전체 디자인
-========================================= */
+/* 기본 설정 */
+:root {
+    --blue: #2925ff;
+    --black: #111111;
+    --gray: #777777;
+    --line: #dedede;
+    --paper: #ffffff;
+    --soft: #f6f6f8;
+}
 
 .stApp {
-    background: #ffffff;
-    color: #111111;
+    background: var(--paper);
+    color: var(--black);
 }
 
 .block-container {
@@ -29,363 +89,394 @@ st.markdown("""
     padding: 1.5rem 3rem 3rem;
 }
 
-/* Streamlit 기본 장식 최소화 */
-#MainMenu {
-    visibility: hidden;
-}
-
+/* 기본 메뉴 및 푸터 숨김 */
+#MainMenu,
 footer {
     visibility: hidden;
 }
 
-/* =========================================
-   2. 상단 브랜드 헤더
-========================================= */
+/* 사이드바 숨김 */
+[data-testid="stSidebar"] {
+    display: none;
+}
 
+[data-testid="collapsedControl"] {
+    display: none;
+}
+
+/* 상단 브랜드 */
 .brand-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0 25px;
-    border-bottom: 1px solid #d9d9d9;
-    margin-bottom: 35px;
+    gap: 20px;
+    padding: 12px 0 24px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 42px;
 }
 
 .brand-name {
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 900;
-    letter-spacing: -2px;
-    color: #111111;
-    line-height: 1;
+    letter-spacing: -1.8px;
+    color: var(--black);
 }
 
 .brand-dot {
-    color: #201bff;
+    color: var(--blue);
 }
 
-.brand-right {
-    font-size: 12px;
-    font-weight: 600;
-    color: #777777;
-    letter-spacing: 1.5px;
+.brand-meta {
     text-align: right;
+    font-size: 10px;
+    line-height: 1.8;
+    color: var(--gray);
+    letter-spacing: 1.5px;
 }
 
-/* =========================================
-   3. 메인 타이틀
-========================================= */
-
+/* 메인 타이틀 */
 .eyebrow {
+    color: var(--blue);
     font-size: 11px;
-    color: #201bff;
     font-weight: 800;
     letter-spacing: 4px;
-    margin-bottom: 25px;
+    margin-bottom: 24px;
 }
 
 .main-title {
-    font-size: clamp(48px, 7.5vw, 108px);
+    color: var(--black);
+    font-size: clamp(52px, 8vw, 112px);
     font-weight: 900;
-    letter-spacing: -7px;
+    letter-spacing: -0.075em;
     line-height: 0.98;
-    color: #111111;
-    margin: 0;
-    word-break: keep-all;
+    overflow-wrap: anywhere;
 }
 
 .main-title .blue {
-    color: #201bff;
+    color: var(--blue);
 }
 
 .main-description {
-    font-size: 16px;
-    line-height: 1.9;
     color: #555555;
-    margin-top: 30px;
-    max-width: 540px;
+    font-size: 15px;
+    line-height: 2;
+    margin-top: 28px;
+    margin-bottom: 32px;
 }
 
+/* 메인 하단 메타 정보 */
 .hero-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #d9d9d9;
-    padding: 35px 0 25px;
-    margin-bottom: 60px;
+    gap: 16px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+    margin-bottom: 45px;
 }
 
 .hero-label {
-    font-size: 11px;
     color: #888888;
+    font-size: 10px;
+    font-weight: 700;
     letter-spacing: 2px;
-    font-weight: 700;
 }
 
-.hero-date {
-    font-size: 13px;
-    color: #111111;
+.hero-right {
+    color: var(--black);
+    font-size: 11px;
     font-weight: 700;
+    letter-spacing: 1px;
+    text-align: right;
 }
 
-/* =========================================
-   4. 서비스 섹션
-========================================= */
+/* 각진 날짜 패널 */
+.date-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--blue);
+    border-radius: 0;
+    padding: 20px 24px;
+    margin-bottom: 52px;
+}
 
+.date-label {
+    color: #777777;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 7px;
+}
+
+.date-value {
+    color: var(--black);
+    font-size: clamp(20px, 3vw, 27px);
+    font-weight: 850;
+    letter-spacing: -1px;
+}
+
+.date-weekday {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-align: right;
+}
+
+/* 서비스 섹션 제목 */
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: end;
-    margin-bottom: 28px;
+    gap: 20px;
+    margin-bottom: 25px;
 }
 
 .section-title {
-    font-size: 31px;
+    color: var(--black);
+    font-size: clamp(24px, 3vw, 32px);
     font-weight: 900;
     letter-spacing: -1.5px;
-    color: #111111;
 }
 
 .section-caption {
-    color: #777777;
+    color: var(--gray);
     font-size: 13px;
-    margin-top: 8px;
+    margin-top: 7px;
 }
 
 .section-number {
-    color: #201bff;
-    font-size: 12px;
+    color: var(--blue);
+    font-size: 11px;
     font-weight: 800;
     letter-spacing: 2px;
+    white-space: nowrap;
 }
 
-/* =========================================
-   5. 서비스 카드
-========================================= */
-
-div[data-testid="stVerticalBlockBorderWrapper"] {
-    background: #ffffff;
-    border: 1px solid #dedede;
-    border-radius: 2px;
-    box-shadow: none;
-    padding: 18px 18px 20px;
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+/* 서비스 카드 */
+.service-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    border-color: #201bff;
-    box-shadow: 0 8px 24px rgba(32, 27, 255, 0.06);
-}
-
-/* 카드 위쪽 번호 */
 .card-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
+    padding-bottom: 15px;
+    margin-bottom: 24px;
     border-bottom: 1px solid #eeeeee;
-    padding-bottom: 17px;
-    margin-bottom: 25px;
 }
 
 .card-number {
-    font-size: 11px;
+    color: var(--blue);
+    font-size: 10px;
     font-weight: 800;
-    letter-spacing: 2px;
-    color: #201bff;
+    letter-spacing: 1.2px;
 }
 
 .card-category {
-    font-size: 10px;
     color: #999999;
+    font-size: 9px;
     letter-spacing: 1px;
 }
 
-/* 카드 아이콘 */
 .card-icon {
-    font-size: 43px;
-    margin-bottom: 25px;
-    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    color: var(--blue);
+    background: #f4f4ff;
+    border: 1px solid #e5e4ff;
+    border-radius: 0;
+    margin-bottom: 23px;
 }
 
-/* 카드 제목 */
 .card-title {
-    font-size: 25px;
+    color: var(--black);
+    font-size: 23px;
     font-weight: 900;
     letter-spacing: -1px;
-    color: #111111;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
-/* 카드 설명 */
 .card-description {
-    font-size: 14px;
-    line-height: 1.9;
     color: #777777;
-    min-height: 58px;
-    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.9;
+    min-height: 50px;
 }
 
-/* =========================================
-   6. 버튼 디자인
-========================================= */
+/* 카드 컨테이너 */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    padding: 14px;
+    transition: border-color 0.2s ease;
+}
 
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    border-color: #aaa8ff;
+}
+
+/* 버튼 기본 디자인 */
 .stButton {
-    margin-top: 18px;
+    margin-top: 15px;
 }
 
 .stButton > button {
+    width: 100%;
+    min-height: 48px;
+    color: var(--black);
     background: #ffffff;
-    color: #111111;
     border: 1px solid #d7d7d7;
-    border-radius: 2px;
-    min-height: 49px;
+    border-radius: 0;
     font-size: 13px;
     font-weight: 750;
     transition: all 0.2s ease;
 }
 
 .stButton > button:hover {
-    background: #201bff;
     color: #ffffff;
-    border-color: #201bff;
+    background: var(--blue);
+    border-color: var(--blue);
+    transform: translateY(-1px);
     box-shadow: none;
-    transform: translateY(-2px);
 }
 
-.stButton > button:focus {
-    box-shadow: none;
-    outline: 1px solid #201bff;
+.stButton > button:focus:not(:active) {
+    color: var(--black);
+    border-color: var(--blue);
+    box-shadow: 0 0 0 1px var(--blue);
 }
 
-/* =========================================
-   7. 날짜 안내
-========================================= */
-
-div[data-testid="stAlert"] {
-    background: #f7f7f7;
-    border: 1px solid #e7e7e7;
-    border-radius: 2px;
-    color: #333333;
-    margin-bottom: 35px;
-}
-
-/* =========================================
-   8. 학교생활 TIP
-========================================= */
-
+/* 학교생활 팁 */
 .tip-section {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    gap: 35px;
-    border-top: 1px solid #d9d9d9;
-    border-bottom: 1px solid #d9d9d9;
-    padding: 30px 0;
-    margin-top: 60px;
+    gap: 30px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 28px 0;
+    margin-top: 55px;
 }
 
 .tip-label {
-    color: #201bff;
-    font-size: 11px;
+    color: var(--blue);
+    font-size: 10px;
     font-weight: 800;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
 }
 
 .tip-title {
-    color: #111111;
-    font-size: 27px;
+    color: var(--black);
+    font-size: 26px;
     font-weight: 900;
     letter-spacing: -1px;
-    margin-top: 12px;
+    margin-top: 10px;
 }
 
 .tip-text {
     color: #555555;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 2;
-    padding-top: 5px;
 }
 
-/* =========================================
-   9. 하단 푸터
-========================================= */
-
+/* 하단 */
 .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 25px;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 24px;
     color: #999999;
-    font-size: 11px;
-    letter-spacing: 1px;
+    font-size: 10px;
 }
 
 .footer-brand {
+    color: var(--black);
     font-size: 15px;
-    color: #111111;
     font-weight: 900;
     letter-spacing: -0.5px;
 }
 
 .footer-brand span {
-    color: #201bff;
+    color: var(--blue);
 }
 
-/* =========================================
-   10. 반응형 모바일 디자인
-========================================= */
-
+/* 반응형 */
 @media (max-width: 768px) {
-
     .block-container {
         padding: 1rem 1rem 2rem;
     }
 
     .brand-name {
-        font-size: 25px;
+        font-size: 24px;
+    }
+
+    .brand-meta {
+        font-size: 9px;
     }
 
     .brand-row {
-        margin-bottom: 30px;
+        margin-bottom: 32px;
     }
 
     .main-title {
-        font-size: clamp(43px, 10vw, 70px);
-        letter-spacing: -3px;
-        line-height: 1.05;
+        font-size: clamp(46px, 12vw, 72px);
+        letter-spacing: -0.06em;
+        line-height: 1.02;
     }
 
     .main-description {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .hero-bottom {
-        margin-bottom: 40px;
-        padding: 25px 0 20px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .hero-right {
+        text-align: left;
+    }
+
+    .date-panel {
+        padding: 17px;
+    }
+
+    .date-value {
+        font-size: 20px;
     }
 
     .section-title {
-        font-size: 25px;
+        font-size: 24px;
+    }
+
+    .section-number {
+        font-size: 9px;
     }
 
     .card-title {
-        font-size: 22px;
+        font-size: 21px;
     }
 
     .tip-section {
         grid-template-columns: 1fr;
-        gap: 15px;
+        gap: 16px;
         margin-top: 40px;
-    }
-
-    .tip-title {
-        font-size: 23px;
-    }
-
-    .footer {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
     }
 }
 
@@ -402,9 +493,9 @@ st.markdown(f"""
     <div class="brand-name">
         SCHOOL LOG<span class="brand-dot">.</span>
     </div>
-    <div class="brand-right">
+    <div class="brand-meta">
         SCHOOL INFORMATION SERVICE<br>
-        TODAY &nbsp; {today:%Y.%m.%d}
+        EST. 2026 &nbsp; / &nbsp; {today:%Y.%m.%d}
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -435,7 +526,7 @@ st.markdown("""
     <div class="hero-label">
         SCHOOL INFORMATION / 2026
     </div>
-    <div class="hero-date">
+    <div class="hero-right">
         YOUR DAILY SCHOOL GUIDE ↘
     </div>
 </div>
@@ -443,14 +534,32 @@ st.markdown("""
 
 
 # =========================================
-# 날짜 안내
+# 오늘 날짜 — 각진 패널
 # =========================================
 
-st.info(f"📅 오늘 날짜: {today:%Y년 %m월 %d일}")
+weekday_ko = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"]
+weekday = weekday_ko[today.weekday()]
+
+st.markdown(f"""
+<div class="date-panel">
+    <div>
+        <div class="date-label">TODAY / 오늘의 날짜</div>
+        <div class="date-value">
+            {today:%Y년 %m월 %d일}
+        </div>
+    </div>
+    <div class="date-weekday">
+        {escape(weekday)}<br>
+        <span style="color:#999999;font-size:10px;">
+            {today:%Y . %m . %d}
+        </span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # =========================================
-# 서비스 바로가기
+# 서비스 섹션
 # =========================================
 
 st.markdown("""
@@ -462,7 +571,7 @@ st.markdown("""
         </div>
     </div>
     <div class="section-number">
-        INDEX  /  03
+        INDEX / 03
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -478,21 +587,23 @@ col1, col2, col3 = st.columns(3, gap="medium")
 with col1:
     with st.container(border=True):
 
-        st.markdown("""
-        <div class="card-top">
-            <span class="card-number">01 / SCHEDULE</span>
-            <span class="card-category">CALENDAR</span>
-        </div>
+        st.markdown(f"""
+        <div class="service-card">
+            <div class="card-top">
+                <span class="card-number">01 / SCHEDULE</span>
+                <span class="card-category">CALENDAR</span>
+            </div>
 
-        <div class="card-icon">🗓️</div>
+            <div class="card-icon">
+                {make_icon("calendar")}
+            </div>
 
-        <div class="card-title">
-            학교 일정 달력
-        </div>
+            <div class="card-title">학교 일정 달력</div>
 
-        <div class="card-description">
-            시험, 수행평가, 학교 행사 일정을<br>
-            한눈에 확인하세요.
+            <div class="card-description">
+                시험, 수행평가, 학교 행사 일정을<br>
+                한눈에 확인하세요.
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -511,21 +622,23 @@ with col1:
 with col2:
     with st.container(border=True):
 
-        st.markdown("""
-        <div class="card-top">
-            <span class="card-number">02 / SAFETY</span>
-            <span class="card-category">EMERGENCY</span>
-        </div>
+        st.markdown(f"""
+        <div class="service-card">
+            <div class="card-top">
+                <span class="card-number">02 / SAFETY</span>
+                <span class="card-category">EMERGENCY</span>
+            </div>
 
-        <div class="card-icon">🩹</div>
+            <div class="card-icon">
+                {make_icon("medical")}
+            </div>
 
-        <div class="card-title">
-            응급톡
-        </div>
+            <div class="card-title">응급톡</div>
 
-        <div class="card-description">
-            응급상황 행동 요령과<br>
-            아플 때 대처법을 확인하세요.
+            <div class="card-description">
+                응급상황 행동 요령과<br>
+                아플 때 대처법을 확인하세요.
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -544,21 +657,23 @@ with col2:
 with col3:
     with st.container(border=True):
 
-        st.markdown("""
-        <div class="card-top">
-            <span class="card-number">03 / D-DAY</span>
-            <span class="card-category">COUNTDOWN</span>
-        </div>
+        st.markdown(f"""
+        <div class="service-card">
+            <div class="card-top">
+                <span class="card-number">03 / D-DAY</span>
+                <span class="card-category">COUNTDOWN</span>
+            </div>
 
-        <div class="card-icon">⏳</div>
+            <div class="card-icon">
+                {make_icon("clock")}
+            </div>
 
-        <div class="card-title">
-            D-Day 알람
-        </div>
+            <div class="card-title">D-Day 알람</div>
 
-        <div class="card-description">
-            시험과 과제 제출일까지<br>
-            남은 날짜를 확인하세요.
+            <div class="card-description">
+                시험과 과제 제출일까지<br>
+                남은 날짜를 확인하세요.
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -576,15 +691,9 @@ with col3:
 
 st.markdown("""
 <div class="tip-section">
-
     <div>
-        <div class="tip-label">
-            SCHOOL LIFE / TIP
-        </div>
-
-        <div class="tip-title">
-            Stay prepared.
-        </div>
+        <div class="tip-label">SCHOOL LIFE / TIP</div>
+        <div class="tip-title">Stay prepared.</div>
     </div>
 
     <div class="tip-text">
@@ -593,7 +702,6 @@ st.markdown("""
         응급상황에서는 혼자 해결하려 하지 말고
         주변 선생님에게 도움을 요청하세요.
     </div>
-
 </div>
 """, unsafe_allow_html=True)
 
@@ -613,3 +721,4 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+```
