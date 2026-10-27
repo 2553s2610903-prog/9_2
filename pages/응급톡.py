@@ -1,6 +1,4 @@
 
-
-
 import streamlit as st
 
 st.set_page_config(
@@ -12,7 +10,7 @@ st.set_page_config(
 st.markdown("""
 <style>
 .stApp {
-    background: #f4f8fc;
+    background-color: #f4f8fc;
 }
 .block-container {
     max-width: 1100px;
@@ -48,7 +46,7 @@ st.markdown("""
     text-align: center;
     color: #174d82;
     font-weight: bold;
-    padding: 5px;
+    padding: 8px;
     margin-bottom: 10px;
 }
 .picture {
@@ -104,6 +102,7 @@ st.markdown(
     '<div class="poster-title">🚨 응급 상황별 안내 포스터</div>',
     unsafe_allow_html=True
 )
+
 st.markdown(
     '<div class="subtitle">'
     '위급한 순간, 침착하게! 올바른 응급처치가 소중한 생명을 지킵니다.'
@@ -115,7 +114,7 @@ name = st.text_input("제작자 이름", "최은진")
 
 situations = [
     {
-        "label": "응급상황 1",
+        "label": "응급상황 1: 화상",
         "icon": "🔥",
         "name": "화상",
         "steps": [
@@ -127,7 +126,7 @@ situations = [
         "warning": "얼음, 치약, 기름을 바르거나 물집을 터뜨리지 마세요."
     },
     {
-        "label": "응급상황 2",
+        "label": "응급상황 2: 출혈",
         "icon": "🩹",
         "name": "출혈",
         "steps": [
@@ -139,14 +138,14 @@ situations = [
         "warning": "상처에 박힌 물체를 직접 빼내지 마세요."
     },
     {
-        "label": "응급상황 3",
+        "label": "응급상황 3: 코피",
         "icon": "🩸",
         "name": "코피",
         "steps": [
             "앉아서 머리를 약간 앞으로 숙입니다.",
-            "콧방울의 부드러운 부분을 10~15분간 눌러 줍니다.",
+            "콧방울의 부드러운 부분을 10~15분간 계속 누릅니다.",
             "입으로 숨을 쉬고 피는 삼키지 않습니다.",
-            "20분 정도 압박해도 멈추지 않으면 진료를 받습니다."
+            "20분간 압박해도 멈추지 않으면 진료를 받습니다."
         ],
         "warning": "고개를 뒤로 젖히거나 코를 세게 풀지 마세요."
     }
@@ -171,7 +170,6 @@ for item in situations:
             unsafe_allow_html=True
         )
 
-        # '상황별 그림' 문구 없이 응급 상황 이름만 표시
         st.markdown(
             f'<div class="picture">'
             f'<div style="font-size:55px">{item["icon"]}</div>'
@@ -203,6 +201,7 @@ st.markdown(
     '<div class="footer">📞 생명이 위급하면 119</div>',
     unsafe_allow_html=True
 )
+
 st.markdown('</div>', unsafe_allow_html=True)
 
 st.caption(
