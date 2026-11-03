@@ -1,6 +1,9 @@
-
 import streamlit as st
-from datetime import date
+from datetime import datetime, timezone, timedelta
+
+# 한국 표준시(KST) 설정
+KST = timezone(timedelta(hours=9))
+today = datetime.now(KST).date()
 
 st.set_page_config(
     page_title="SCHOOL LOG",
@@ -191,7 +194,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------- 날짜 ----------
-st.info(f"📅 오늘 날짜: {date.today():%Y년 %m월 %d일}")
+st.info(f"📅 오늘 날짜: {today:%Y년 %m월 %d일}")
 
 # ---------- 서비스 바로가기 ----------
 st.subheader("📌 서비스 바로가기")
